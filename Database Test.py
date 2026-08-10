@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 
 SQLALCHEMY_DATABASE_URL="sqlite:///./sqlite.db"
 
@@ -13,20 +13,36 @@ C1=declarative_base()
 
 class user(C1):
     __tablename__="user"
-    id=Column(Integer, primary_key=True)
+    id=Column(Integer, primary_key=True, autoincrement=True)
     first_name=Column(String(30))
     age=Column(Integer)
     def __repr__(slef):
         return f"user(id={slef.id},name={slef.first_name})"
+    address=relationship("address", backref="address", uselist=False)
+
+class address(C1):
+    __tablename__= "address"
+    address_id=Column(Integer, autoincrement=True, primary_key=True)
+    id_ad=Column(Integer, ForeignKey("user.id"))
+    city=Column(String)
+    number=Column(Integer)
+    def __repr__(self):
+        return f"address(city={self.city}, number={self.number}, address_id={self.address_id}"
+
+
+
 
 C1.metadata.create_all(engin)
 
 session=sessionlocal()
-Eli=user(first_name="Eli", age=26)
-Milad=user(first_name="milad", age=28)
-Amir=user(first_name="amir", age=24)
-uesrs=[Milad, Eli, Amir]
-session.add_all(uesrs)
-C3=session.query(user).filter_by(first_name="milad", id=13).first()
-session.delete(C3)
-session.commit()
+#Eli=user(first_name="Eli", age=26)
+#Milad=user(first_name="milad", age=28)
+#Amir=user(first_name="amir", age=24)
+#uesrs=[Milad, Eli, Amir]
+#session.add_all(uesrs)
+#C3=session.query(user).filter_by(first_name="milad", id=13).first()
+#session.delete(C3)
+#session.commit()
+#user=session.query(user).filter_by(id=1).one_or_none
+
+
